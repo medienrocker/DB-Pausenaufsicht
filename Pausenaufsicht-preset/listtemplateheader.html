@@ -1,81 +1,4 @@
-<!DOCTYPE html>
-<html lang="de">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pausenaufsicht</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* min-height: 100vh; */
-            margin: 0;
-            background-color: #f0f4f8;
-        }
-
-        table {
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        th,
-        td {
-            border: 1px solid #bbb;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #4a90e2;
-            color: white;
-            font-weight: bold;
-        }
-
-        .pause-cell {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            vertical-align: middle;
-        }
-
-        .orte-cell {
-            background-color: #f1f3f5;
-        }
-
-        .content-cell {
-            padding: 0;
-        }
-
-        .subcell-container {
-            display: flex;
-            flex-wrap: wrap;
-            height: 100%;
-        }
-
-        .subcell-item {
-            flex: 0 0 auto;
-            width: 30px;
-            height: 30px;
-            margin: 2px;
-            background-color: #e9ecef;
-            border-radius: 2px;
-        }
-
-        .subcell-item.filled {
-            background-color: #28a745;
-        }
-
-        .subcell-item.overfilled {
-            background-color: #ffa500;
-        }
-    </style>
-</head>
-
-<body>
-    <table id="pausenaufsicht-table">
+<table id="pausenaufsicht-table">
         <thead>
             <tr>
                 <th>Pause</th>
@@ -99,9 +22,9 @@
         const NUM_TEACHERS_NEEDED = 2;
 
         function generateTable() {
-            const tableBody = document.querySelector('#pausenaufsicht-table tbody');
-            const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-            const pauses = Array.from({ length: NUM_PAUSES }, (_, i) => `${i + 1}. Pause`);
+            // const tableBody = document.querySelector('#pausenaufsicht-table tbody');
+            // const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
+            // const pauses = Array.from({ length: NUM_PAUSES }, (_, i) => `${i + 1}. Pause`);
 
             tableBody.innerHTML = ''; // Clear existing content
 
@@ -149,6 +72,3 @@
         // Generate the table when the page loads
         window.onload = generateTable;
     </script>
-</body>
-
-</html>
