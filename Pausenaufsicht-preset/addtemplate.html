@@ -15,63 +15,101 @@
     </tbody>
 </table>
 
+<!-- Container for Moodle-generated input fields -->
+<div id="moodle-fields-container" class="hidden">
+    [[slot001]] [[slot002]] [[slot003]] [[slot004]] [[slot005]] [[slot006]] [[slot007]] [[slot008]] [[slot009]] [[slot010]]
+[[slot011]] [[slot012]] [[slot013]] [[slot014]] [[slot015]] [[slot016]] [[slot017]] [[slot018]] [[slot019]] [[slot020]]
+[[slot021]] [[slot022]] [[slot023]] [[slot024]] [[slot025]] [[slot026]] [[slot027]] [[slot028]] [[slot029]] [[slot030]]
+[[slot031]] [[slot032]] [[slot033]] [[slot034]] [[slot035]] [[slot036]] [[slot037]] [[slot038]] [[slot039]] [[slot040]]
+[[slot041]] [[slot042]] [[slot043]] [[slot044]] [[slot045]] [[slot046]] [[slot047]] [[slot048]] [[slot049]] [[slot050]]
+[[slot051]] [[slot052]] [[slot053]] [[slot054]] [[slot055]] [[slot056]] [[slot057]] [[slot058]] [[slot059]] [[slot060]]
+[[slot061]] [[slot062]] [[slot063]] [[slot064]] [[slot065]] [[slot066]] [[slot067]] [[slot068]] [[slot069]] [[slot070]]
+[[slot071]] [[slot072]] [[slot073]] [[slot074]] [[slot075]] [[slot076]] [[slot077]] [[slot078]] [[slot079]] [[slot080]]
+[[slot081]] [[slot082]] [[slot083]] [[slot084]] [[slot085]] [[slot086]] [[slot087]] [[slot088]] [[slot089]] [[slot090]]
+[[slot091]] [[slot092]] [[slot093]] [[slot094]] [[slot095]] [[slot096]] [[slot097]] [[slot098]] [[slot099]] [[slot100]]
+[[slot101]] [[slot102]] [[slot103]] [[slot104]] [[slot105]] [[slot106]] [[slot107]] [[slot108]] [[slot109]] [[slot110]]
+[[slot111]] [[slot112]] [[slot113]] [[slot114]] [[slot115]] [[slot116]] [[slot117]] [[slot118]] [[slot119]] [[slot120]]
+[[slot121]] [[slot122]] [[slot123]] [[slot124]] [[slot125]] [[slot126]] [[slot127]] [[slot128]] [[slot129]] [[slot130]]
+[[slot131]] [[slot132]] [[slot133]] [[slot134]] [[slot135]] [[slot136]] [[slot137]] [[slot138]] [[slot139]] [[slot140]]
+[[slot141]] [[slot142]] [[slot143]] [[slot144]] [[slot145]] [[slot146]] [[slot147]] [[slot148]] [[slot149]] [[slot150]]
+[[slot151]] [[slot152]] [[slot153]] [[slot154]] [[slot155]] [[slot156]] [[slot157]] [[slot158]] [[slot159]] [[slot160]]
+[[slot161]] [[slot162]] [[slot163]] [[slot164]] [[slot165]] [[slot166]] [[slot167]] [[slot168]] [[slot169]] [[slot170]]
+[[slot171]] [[slot172]] [[slot173]] [[slot174]] [[slot175]] [[slot176]] [[slot177]] [[slot178]] [[slot179]] [[slot180]]
+[[slot181]] [[slot182]] [[slot183]] [[slot184]] [[slot185]] [[slot186]] [[slot187]] [[slot188]] [[slot189]] [[slot190]]
+[[slot191]] [[slot192]] [[slot193]] [[slot194]] [[slot195]] [[slot196]] [[slot197]] [[slot198]] [[slot199]] [[slot200]]
+</div>
+
+
 <script>
     // Assume the following global variables are defined in the JS Vorlage:
     // const NUM_PAUSES = 3;
     // const ORTE = ['Schulhof', 'Mensa', 'Sportplatz'];
     // const NUM_TEACHERS_NEEDED = 2; // This won't be used in this script
 
-    function generateNewEntryTable() {
-            const tableBody = document.querySelector('#pausenaufsicht-table tbody');
-            const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-            const pauses = Array.from({ length: NUM_PAUSES }, (_, i) => `${i + 1}. Pause`);
+function generateNewEntryTable() {
+    const tableBody = document.querySelector('#pausenaufsicht-table tbody');
+    const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
+    const pauses = Array.from({ length: NUM_PAUSES }, (_, i) => `${i + 1}. Pause`);
+    const moodleFieldsContainer = document.getElementById('moodle-fields-container');
+    const moodleFields = Array.from(moodleFieldsContainer.children);
 
-            tableBody.innerHTML = ''; // Clear existing content
+    tableBody.innerHTML = ''; // Clear existing content
 
-            let slotCounter = 1; // Initialize the slot counter
+    let fieldIndex = 0; // Initialize the field index
 
-            pauses.forEach(pause => {
-                ORTE.forEach((ort, i) => {
-                    const row = document.createElement('tr');
+    pauses.forEach(pause => {
+        ORTE.forEach((ort, i) => {
+            const row = document.createElement('tr');
 
-                    // Pause cell (only for the first row of each pause)
-                    if (i === 0) {
-                        const pauseCell = document.createElement('td');
-                        pauseCell.textContent = pause;
-                        pauseCell.className = 'pause-cell';
-                        pauseCell.rowSpan = ORTE.length;
-                        row.appendChild(pauseCell);
-                    }
+            // Pause cell (only for the first row of each pause)
+            if (i === 0) {
+                const pauseCell = document.createElement('td');
+                pauseCell.textContent = pause;
+                pauseCell.className = 'pause-cell';
+                pauseCell.rowSpan = ORTE.length;
+                row.appendChild(pauseCell);
+            }
 
-                    // Orte cell
-                    const orteCell = document.createElement('td');
-                    orteCell.textContent = ort;
-                    orteCell.className = 'orte-cell';
-                    row.appendChild(orteCell);
+            // Orte cell
+            const orteCell = document.createElement('td');
+            orteCell.textContent = ort;
+            orteCell.className = 'orte-cell';
+            row.appendChild(orteCell);
 
-                    // Weekday cells
-                    weekdays.forEach(day => {
-                        const dayCell = document.createElement('td');
-                        dayCell.className = 'content-cell';
+            // Weekday cells
+            weekdays.forEach(day => {
+                const dayCell = document.createElement('td');
+                dayCell.className = 'content-cell';
 
-                        // Create a single subcell-item for each day/location combination
-                        const subcell = document.createElement('div');
-                        subcell.className = 'single-subcell-item';
+                // Create a single subcell-item for each day/location combination
+                const subcell = document.createElement('div');
+                subcell.className = 'single-subcell-item';
 
-                        // Add the slot field with incrementing number
-                        const slotNumber = String(slotCounter).padStart(3, '0');
-                        subcell.innerHTML = `[[slot${slotNumber}]]`;
-                        slotCounter++; // Increment the counter
+                // Move the next Moodle field into this cell
+                if (fieldIndex < moodleFields.length) {
+                    subcell.appendChild(moodleFields[fieldIndex]);
+                    fieldIndex++;
+                } else {
+                    subcell.textContent = 'No more fields available';
+                }
 
-                        dayCell.appendChild(subcell);
-                        row.appendChild(dayCell);
-                    });
-
-                    tableBody.appendChild(row);
-                });
+                dayCell.appendChild(subcell);
+                row.appendChild(dayCell);
             });
-        }
+
+            tableBody.appendChild(row);
+        });
+    });
+
+    // Hide the original container of Moodle fields
+    moodleFieldsContainer.style.display = 'none';
+}
+
+// Use DOMContentLoaded event to ensure the DOM is fully loaded
+// document.addEventListener('DOMContentLoaded', function() {
+//     generateNewEntryTable();
+// });
 
     // Generate the table when the page loads
-    window.onload = generateNewEntryTable;
+   window.onload = generateNewEntryTable;
 </script>
