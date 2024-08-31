@@ -1,0 +1,85 @@
+/* CC0 by @medienrocker  */
+
+/* body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f4f8;
+} */
+
+table {
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+    border: 1px solid #bbb;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #4a90e2;
+    color: white;
+    font-weight: bold;
+}
+
+.pause-cell {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.orte-cell {
+    background-color: #f1f3f5;
+}
+
+.content-cell {
+    padding: 0;
+}
+
+.subcell-container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
+.subcell-item {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    margin: 2px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+.single-subcell-item {
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.single-subcell-item input[type="text"] {
+    max-width: 50px;
+    margin-left: 4px;
+    margin-right: 4px;
+    text-transform: uppercase;
+}
+
+.subcell-item.filled {
+    background-color: #28a745;
+}
+
+.subcell-item.overfilled {
+    background-color: #ffa500;
+}
