@@ -378,10 +378,24 @@
 </div>
 
     <script>
-        // Global variables for easy customization
-        const NUM_PAUSES = 3;
-        const ORTE = ['Schulhof', 'Mensa', 'Sportplatz']; // Example locations
-        const NUM_TEACHERS_NEEDED = 2;
+            // Define the structure for ORTE with individual NUM_TEACHERS_NEEDED
+            const ORTE = [
+                { name: 'Schulhof', teachersNeeded: 2 },
+                { name: 'Mensa', teachersNeeded: 1 },
+                { name: 'Sportplatz', teachersNeeded: 2 }
+            ];
+
+            // Define the structure for weekdays with individual number of pauses
+            const WEEKDAYS = [
+                { name: 'Mo', pauses: 2 },
+                { name: 'Di', pauses: 3 },
+                { name: 'Mi', pauses: 2 },
+                { name: 'Do', pauses: 2 },
+                { name: 'Fr', pauses: 2 }
+            ];
+
+            // Define the maximum number of pauses across all days
+            const MAX_PAUSES = Math.max(...WEEKDAYS.map(day => day.pauses));
 
     // Wait for the DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', function () {
@@ -391,7 +405,7 @@
 
         slots.forEach(slot => {
             const slotNumber = slot.className;
-            const value = slot.textContent.trim();
+            const value = slot.innerHTML.trim();
             if (value !== '') {
                 if (!slotData[slotNumber]) {
                     slotData[slotNumber] = [];
@@ -414,16 +428,13 @@
 
     function generatePausenaufsichtTable(slotData) {
         const tableBody = document.querySelector('#pausenaufsicht-table tbody');
-        const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-        const pauses = Array.from({ length: NUM_PAUSES }, (_, i) => `${i + 1}. Pause`);
 
         tableBody.innerHTML = ''; // Clear existing content
 
         let slotIndex = 1;
 
-        // Only iterate through the number of pauses specified by NUM_PAUSES
-        for (let pauseIndex = 0; pauseIndex < NUM_PAUSES; pauseIndex++) {
-            const pause = pauses[pauseIndex];
+        // Iterate through the maximum number of pauses
+        for (let pauseIndex = 0; pauseIndex < MAX_PAUSES; pauseIndex++) {
             const pauseEntries = new Map(); // Track entries for each day in this pause
 
             ORTE.forEach((ort, ortIndex) => {
@@ -432,7 +443,7 @@
                 // Pause cell (only for the first row of each pause)
                 if (ortIndex === 0) {
                     const pauseCell = document.createElement('td');
-                    pauseCell.textContent = pause;
+                    pauseCell.textContent = `${pauseIndex + 1}. Pause`;
                     pauseCell.className = 'pause-cell';
                     pauseCell.rowSpan = ORTE.length;
                     row.appendChild(pauseCell);
@@ -440,12 +451,12 @@
 
                 // Orte cell
                 const orteCell = document.createElement('td');
-                orteCell.textContent = ort;
+                orteCell.textContent = ort.name;
                 orteCell.className = 'orte-cell';
                 row.appendChild(orteCell);
 
                 // Weekday cells
-                weekdays.forEach((day, dayIndex) => {
+                WEEKDAYS.forEach(day => {
                     const dayCell = document.createElement('td');
                     dayCell.className = 'content-cell';
                     const container = document.createElement('div');
@@ -453,39 +464,46 @@
 
                     const slotKey = `slot${String(slotIndex).padStart(3, '0')}`;
                     const entries = slotData[slotKey] || [];
-                    const numSubcells = Math.max(entries.length, NUM_TEACHERS_NEEDED);
 
-                    if (!pauseEntries.has(day)) {
-                        pauseEntries.set(day, new Set());
+                    if (!pauseEntries.has(day.name)) {
+                        pauseEntries.set(day.name, new Set());
                     }
-                    const dayEntries = pauseEntries.get(day);
+                    const dayEntries = pauseEntries.get(day.name);
 
-                    for (let j = 0; j < numSubcells; j++) {
-                        const subcell = document.createElement('div');
-                        subcell.className = 'subcell-item';
+                    if (pauseIndex < day.pauses) {
+                        for (let j = 0; j < Math.max(entries.length, ort.teachersNeeded); j++) {
+                            const subcell = document.createElement('div');
+                            subcell.className = 'subcell-item';
 
-                        if (j < entries.length) {
-                            const span = document.createElement('span');
-                            const name = entries[j].toLowerCase();
-                            span.textContent = entries[j];
-                            subcell.appendChild(span);
+                            if (j < entries.length) {
+                                const span = document.createElement('span');
+                                const name = entries[j].toLowerCase();
+                                span.textContent = entries[j];
+                                subcell.appendChild(span);
 
-                            if (entries.length < NUM_TEACHERS_NEEDED) {
-                                subcell.classList.add('almostFilled');
-                            } else if (j < NUM_TEACHERS_NEEDED) {
-                                subcell.classList.add('filled');
-                            } else {
-                                subcell.classList.add('overfilled');
+                                if (entries.length < ort.teachersNeeded) {
+                                    subcell.classList.add('almostFilled');
+                                } else if (j < ort.teachersNeeded) {
+                                    subcell.classList.add('filled');
+                                } else {
+                                    subcell.classList.add('overfilled');
+                                }
+
+                                // Check for conflicts
+                                if (dayEntries.has(name)) {
+                                    subcell.classList.add('conflict');
+                                } else {
+                                    dayEntries.add(name);
+                                }
                             }
 
-                            // Check for conflicts
-                            if (dayEntries.has(name)) {
-                                subcell.classList.add('conflict');
-                            } else {
-                                dayEntries.add(name);
-                            }
+                            container.appendChild(subcell);
                         }
-
+                    } else {
+                        // Create disabled cell for non-existent pauses
+                        const subcell = document.createElement('div');
+                        subcell.className = 'subcell-item disabled';
+                        subcell.textContent = '-';
                         container.appendChild(subcell);
                     }
 
@@ -499,6 +517,8 @@
         }
     }
     </script>
+
+    <a href=##moreurl##></a>
 </body>
 
 </html>
