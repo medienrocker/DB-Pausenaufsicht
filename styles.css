@@ -24,6 +24,16 @@ td {
     text-align: center;
 }
 
+/* Styles for thicker pause borders */
+.pause-group-start {
+    border-top: 10px solid #bbb;
+}
+
+/* Remove top border for the first row in the table */
+tbody tr:first-child {
+    border-top: none;
+}
+
 th {
     background-color: #4a90e2;
     color: white;
@@ -42,6 +52,7 @@ th {
 
 .content-cell {
     padding: 0;
+    background-color: #555;
 }
 
 .subcell-container {
@@ -52,12 +63,14 @@ th {
 
 .subcell-item {
     flex: 0 0 auto;
-    width: 35px;
-    height: 35px;
+    width: 42px;
+    height: 20px;
     margin: 2px;
     background-color: #e9ecef;
     border-radius: 2px;
     text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
     transition: all 0.3s ease;
 }
 
@@ -79,14 +92,25 @@ th {
     text-transform: uppercase;
 }
 
+.subcell a {
+    cursor: pointer;
+}
+
 .single-subcell-item {
     width: 100%;
     height: 100%;
-    min-height: 35px;
-    background-color: #e9ecef;
+    min-height: 20px;
+    background-color: #555;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 4px;
+}
+
+.single-subcell-item.disabled {
+    width: 90%;
+    transform: scale(1);
+    box-shadow: none;
 }
 
 .single-subcell-item span {
@@ -102,7 +126,7 @@ th {
 }
 
 .single-subcell-item input[type="text"] {
-    max-width: 50px;
+    max-width: 60px;
     margin-left: 4px;
     margin-right: 4px;
     text-transform: uppercase;
@@ -117,6 +141,22 @@ th {
     background-color: #ffa500;
 }
 
+.subcell-item.almostFilled {
+    /* background-color: #a8f7a8; */
+}
+
+.subcell-item.conflict {
+    border: 2px solid red;
+    position: relative;
+}
+
+.subcell-item.disabled {
+    background-color: #555;
+    width: 90%;
+    transform: scale(1);
+    box-shadow: none;
+}
+
 /* Add title/tooltip to overfilled item */
 .subcell-item.overfilled::before {
     content: "Mehr Aufsichten\A als benötigt!";
@@ -125,9 +165,10 @@ th {
     top: -45px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #333;
+    background-color: #555;
     color: white;
     padding: 5px 10px;
+    border: 2px solid #ffa500;
     border-radius: 4px;
     font-size: 11px;
     width: max-content;
@@ -141,15 +182,6 @@ th {
     visibility: visible;
 }
 
-.subcell-item.almostFilled {
-    background-color: #a8f7a8;
-}
-
-.subcell-item.conflict {
-    border: 2px solid red;
-    position: relative;
-}
-
 /* Add title/tooltip to conflict sign */
 .subcell-item.conflict::before {
     content: "Pro Person nur\A eine Aufsicht pro Pause!";
@@ -158,9 +190,10 @@ th {
     top: -65px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #333;
+    background-color: #555;
     color: white;
     padding: 5px 10px;
+    border: 2px solid red;
     border-radius: 4px;
     font-size: 11px;
     width: max-content;
