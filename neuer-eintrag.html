@@ -13,7 +13,7 @@
     <table id="pausenaufsicht-table">
         <thead>
             <tr>
-                <th>Pause</th>
+                <th>Pausen</th>
                 <th>Orte</th>
                 <th>Mo</th>
                 <th>Di</th>
@@ -72,77 +72,89 @@
     </div>
 
     <script>
-        // Assume the following global variables are defined elsewhere:
-        const NUM_PAUSES = 3;
-        const ORTE = ['Schulhof', 'Mensa', 'Sportplatz'];
-        const NUM_TEACHERS_NEEDED = 2; // This won't be used in this script
+    // Define the structure for ORTE with individual NUM_TEACHERS_NEEDED
+    const ORTE = [
+        { name: 'Schulhof', teachersNeeded: 2 },
+        { name: 'Mensa', teachersNeeded: 1 },
+        { name: 'Sportplatz', teachersNeeded: 1 }
+    ];
 
-        // Wait for the DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function () {
-            generateNewEntryTable();
-        });
+    // Define the structure for weekdays with individual number of pauses
+    const WEEKDAYS = [
+        { name: 'Mo', pauses: 2 },
+        { name: 'Di', pauses: 3 },
+        { name: 'Mi', pauses: 2 },
+        { name: 'Do', pauses: 2 },
+        { name: 'Fr', pauses: 2 }
+    ];
 
-        function generateNewEntryTable() {
-            const tableBody = document.querySelector('#pausenaufsicht-table tbody');
-            const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-            const pauses = Array.from({ length: NUM_PAUSES }, (_, i) => `${i + 1}. Pause`);
-            const moodleFieldsContainer = document.getElementById('moodle-fields-container');
-            const moodleFields = Array.from(moodleFieldsContainer.children);
+    // Define the maximum number of pauses across all days
+    const MAX_PAUSES = Math.max(...WEEKDAYS.map(day => day.pauses));
 
-            tableBody.innerHTML = ''; // Clear existing content
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        generateNewEntryTable();
+    });
 
-            let fieldIndex = 0; // Initialize the field index
+    function generateNewEntryTable() {
+        const tableBody = document.querySelector('#pausenaufsicht-table tbody');
+        const moodleFieldsContainer = document.getElementById('moodle-fields-container');
+        const moodleFields = Array.from(moodleFieldsContainer.children);
 
-            // Only iterate through the number of pauses specified by NUM_PAUSES
-            for (let pauseIndex = 0; pauseIndex < NUM_PAUSES; pauseIndex++) {
-                const pause = pauses[pauseIndex];
+        tableBody.innerHTML = ''; // Clear existing content
 
-                ORTE.forEach((ort, i) => {
-                    const row = document.createElement('tr');
+        let fieldIndex = 0; // Initialize the field index
 
-                    // Pause cell (only for the first row of each pause)
-                    if (i === 0) {
-                        const pauseCell = document.createElement('td');
-                        pauseCell.textContent = pause;
-                        pauseCell.className = 'pause-cell';
-                        pauseCell.rowSpan = ORTE.length;
-                        row.appendChild(pauseCell);
-                    }
+        // Iterate through the maximum number of pauses
+        for (let pauseIndex = 0; pauseIndex < MAX_PAUSES; pauseIndex++) {
+            ORTE.forEach((ort, ortIndex) => {
+                const row = document.createElement('tr');
 
-                    // Orte cell
-                    const orteCell = document.createElement('td');
-                    orteCell.textContent = ort;
-                    orteCell.className = 'orte-cell';
-                    row.appendChild(orteCell);
+                // Pause cell (only for the first row of each pause)
+                if (ortIndex === 0) {
+                    const pauseCell = document.createElement('td');
+                    pauseCell.textContent = `${pauseIndex + 1}. Pause`;
+                    pauseCell.className = 'pause-cell';
+                    pauseCell.rowSpan = ORTE.length;
+                    row.appendChild(pauseCell);
+                }
 
-                    // Weekday cells
-                    weekdays.forEach(day => {
-                        const dayCell = document.createElement('td');
-                        dayCell.className = 'content-cell';
+                // Orte cell
+                const orteCell = document.createElement('td');
+                orteCell.textContent = ort.name;
+                orteCell.className = 'orte-cell';
+                row.appendChild(orteCell);
 
-                        // Create a single subcell-item for each day/location combination
-                        const subcell = document.createElement('div');
-                        subcell.className = 'single-subcell-item';
+                // Weekday cells
+                WEEKDAYS.forEach(day => {
+                    const dayCell = document.createElement('td');
+                    dayCell.className = 'content-cell';
 
-                        // Move the next Moodle field into this cell
+                    const subcell = document.createElement('div');
+                    subcell.className = 'single-subcell-item';
+
+                    if (pauseIndex < day.pauses) {
+                        // Use the next Moodle field
                         if (fieldIndex < moodleFields.length) {
                             subcell.appendChild(moodleFields[fieldIndex]);
                             fieldIndex++;
                         } else {
                             subcell.textContent = 'No more fields available';
                         }
+                    } else {
+                        // Create disabled cell
+                        subcell.classList.add('disabled');
+                        subcell.textContent = '-';
+                    }
 
-                        dayCell.appendChild(subcell);
-                        row.appendChild(dayCell);
-                    });
-
-                    tableBody.appendChild(row);
+                    dayCell.appendChild(subcell);
+                    row.appendChild(dayCell);
                 });
-            }
 
-            // Hide the original container of Moodle fields
-            moodleFieldsContainer.style.display = 'none';
+                tableBody.appendChild(row);
+            });
         }
+    }
     </script>
 </body>
 
