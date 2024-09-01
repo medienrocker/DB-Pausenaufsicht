@@ -4,7 +4,14 @@
     display: none;
 }
 
+.szy_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 table {
+    font-family: sans-serif;
     border-collapse: collapse;
     background-color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -13,7 +20,7 @@ table {
 th,
 td {
     border: 1px solid #bbb;
-    padding: 10px;
+    padding: 4px;
     text-align: center;
 }
 
@@ -35,6 +42,7 @@ th {
 
 .content-cell {
     padding: 0;
+    background-color: #555;
 }
 
 .subcell-container {
@@ -51,11 +59,20 @@ th {
     background-color: #e9ecef;
     border-radius: 2px;
     text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.subcell-item:hover {
+    transform: scale(1.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1;
 }
 
 .subcell-item span {
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 13px;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -65,14 +82,25 @@ th {
     text-transform: uppercase;
 }
 
+.subcell a {
+    cursor: pointer;
+}
+
 .single-subcell-item {
     width: 100%;
     height: 100%;
     min-height: 35px;
-    background-color: #e9ecef;
+    background-color: #555;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 4px;
+}
+
+.single-subcell-item.disabled {
+    width: 90%;
+    transform: scale(1);
+    box-shadow: none;
 }
 
 .single-subcell-item span {
@@ -88,16 +116,202 @@ th {
 }
 
 .single-subcell-item input[type="text"] {
-    max-width: 50px;
+    max-width: 60px;
     margin-left: 4px;
     margin-right: 4px;
     text-transform: uppercase;
+    font-size: 0.9em;
 }
 
 .subcell-item.filled {
-    background-color: #28a745;
+    background-color: #2dc450;
 }
 
 .subcell-item.overfilled {
     background-color: #ffa500;
+}
+
+/* Add title/tooltip to overfilled item */
+.subcell-item.overfilled::before {
+    content: "Mehr Aufsichten\A als benötigt!";
+    white-space: pre-wrap;
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #555;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.subcell-item.overfilled:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.subcell-item.almostFilled {
+    background-color: #a8f7a8;
+}
+
+.subcell-item.conflict {
+    border: 2px solid red;
+    position: relative;
+}
+
+.subcell-item.disabled {
+    background-color: #555;
+    width: 90%;
+    transform: scale(1);
+    box-shadow: none;
+}
+
+/* Add title/tooltip to conflict sign */
+.subcell-item.conflict::before {
+    content: "Pro Person nur\A eine Aufsicht pro Pause!";
+    white-space: pre-wrap;
+    position: absolute;
+    top: -65px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #555;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    width: max-content;
+    max-width: 130px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.subcell-item.conflict:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.subcell-item.conflict::after {
+    content: '!';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: help;
+}
+
+/* ----- Sticker Button ----- */
+
+.sticker-button-edit {
+    display: inline-block;
+    /* padding: 7px 35px 7px 8px;
+    font-size: 16px; */
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    background-color: #83ec0a;
+    border: 3px solid white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    text-align: left;
+    width: 60px;
+    height: 30px;
+    position: relative;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sticker-button-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sticker-button-edit:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.sticker-button-edit svg {
+    position: absolute;
+    right: 10px;
+    top: -19%;
+    left: 5px;
+    width: 50px;
+    height: 45px;
+    fill: currentColor;
+    transition: all 0.2s ease;
+}
+
+.sticker-button-edit:hover svg {
+    top: -35%;
+}
+
+.sticker-button-edit:active svg {
+    top: -25%;
+}
+
+.sticker-button-delete {
+    display: inline-block;
+    /* padding: 7px 35px 7px 8px; 
+    font-size: 16px;*/
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    background-color: #ec240a;
+    border: 3px solid white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    text-align: left;
+    width: 60px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sticker-button-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sticker-button-delete:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.sticker-button-delete svg {
+    position: absolute;
+    right: 10px;
+    top: -19%;
+    left: 19%;
+    width: 40px;
+    height: 35px;
+    fill: currentColor;
+    transition: all 0.2s ease;
+}
+
+.sticker-button-delete:hover svg {
+    top: -35%;
+}
+
+.sticker-button-delete:active svg {
+    top: -25%;
 }
