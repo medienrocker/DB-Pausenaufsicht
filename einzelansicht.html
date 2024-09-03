@@ -491,24 +491,6 @@
 
         // Define the maximum number of pauses across all days
         const MAX_PAUSES = Math.max(...WEEKDAYS.map(day => day.pauses));
-        // Define the structure for ORTE with individual NUM_TEACHERS_NEEDED
-        const ORTE = [
-            { name: 'Schulhof', teachersNeeded: 2 },
-            { name: 'Mensa', teachersNeeded: 1 },
-            { name: 'Sportplatz', teachersNeeded: 1 }
-        ];
-
-        // Define the structure for weekdays with individual number of pauses
-        const WEEKDAYS = [
-            { name: 'Mo', pauses: 2 },
-            { name: 'Di', pauses: 3 },
-            { name: 'Mi', pauses: 2 },
-            { name: 'Do', pauses: 2 },
-            { name: 'Fr', pauses: 2 }
-        ];
-
-        // Define the maximum number of pauses across all days
-        const MAX_PAUSES = Math.max(...WEEKDAYS.map(day => day.pauses));
 
         // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function () {
