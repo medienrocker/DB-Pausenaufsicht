@@ -53,6 +53,7 @@ th {
 .content-cell {
     padding: 0;
     background-color: #555;
+    background-color: #555;
 }
 
 .subcell-container {
@@ -69,6 +70,8 @@ th {
     background-color: #e9ecef;
     border-radius: 2px;
     text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
     text-decoration: none;
     color: inherit;
     transition: all 0.3s ease;
@@ -96,6 +99,10 @@ th {
     cursor: pointer;
 }
 
+.subcell a {
+    cursor: pointer;
+}
+
 .single-subcell-item {
     width: 100%;
     height: 100%;
@@ -104,6 +111,13 @@ th {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 4px;
+}
+
+.single-subcell-item.disabled {
+    width: 90%;
+    transform: scale(1);
+    box-shadow: none;
     padding: 4px;
 }
 
@@ -126,6 +140,7 @@ th {
 }
 
 .single-subcell-item input[type="text"] {
+    max-width: 60px;
     max-width: 60px;
     margin-left: 4px;
     margin-right: 4px;
@@ -166,6 +181,7 @@ th {
     left: 50%;
     transform: translateX(-50%);
     background-color: #555;
+    background-color: #555;
     color: white;
     padding: 5px 10px;
     border: 2px solid #ffa500;
@@ -190,6 +206,7 @@ th {
     top: -65px;
     left: 50%;
     transform: translateX(-50%);
+    background-color: #555;
     background-color: #555;
     color: white;
     padding: 5px 10px;

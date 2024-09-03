@@ -93,6 +93,7 @@
             <thead>
                 <tr>
                     <th>Pausen</th>
+                    <th>Pausen</th>
                     <th>Orte</th>
                     <th>Mo</th>
                     <th>Di</th>
@@ -490,6 +491,24 @@
 
         // Define the maximum number of pauses across all days
         const MAX_PAUSES = Math.max(...WEEKDAYS.map(day => day.pauses));
+        // Define the structure for ORTE with individual NUM_TEACHERS_NEEDED
+        const ORTE = [
+            { name: 'Schulhof', teachersNeeded: 2 },
+            { name: 'Mensa', teachersNeeded: 1 },
+            { name: 'Sportplatz', teachersNeeded: 1 }
+        ];
+
+        // Define the structure for weekdays with individual number of pauses
+        const WEEKDAYS = [
+            { name: 'Mo', pauses: 2 },
+            { name: 'Di', pauses: 3 },
+            { name: 'Mi', pauses: 2 },
+            { name: 'Do', pauses: 2 },
+            { name: 'Fr', pauses: 2 }
+        ];
+
+        // Define the maximum number of pauses across all days
+        const MAX_PAUSES = Math.max(...WEEKDAYS.map(day => day.pauses));
 
         // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function () {
@@ -501,9 +520,9 @@
             const moodleFieldsContainer = document.getElementById('moodle-fields-container');
             const moodleFields = Array.from(moodleFieldsContainer.children);
 
-            tableBody.innerHTML = ''; // Clear existing content
+        tableBody.innerHTML = ''; // Clear existing content
 
-            let fieldIndex = 0; // Initialize the field index
+        let fieldIndex = 0; // Initialize the field index
 
             // Iterate through the maximum number of pauses
             for (let pauseIndex = 0; pauseIndex < MAX_PAUSES; pauseIndex++) {
@@ -548,24 +567,24 @@
                             const subcell = document.createElement('div');
                             subcell.className = 'subcell-item';
 
-                            // Check if there's a corresponding Moodle field with content
-                            if (fieldIndex < moodleFields.length) {
-                                const moodleField = moodleFields[fieldIndex];
-                                const content = moodleField.textContent.trim();
-                                if (content !== '') {
-                                    subcell.classList.add('filled');
-                                    subcell.appendChild(moodleField.cloneNode(true));
+                        // Check if there's a corresponding Moodle field with content
+                        if (fieldIndex < moodleFields.length) {
+                            const moodleField = moodleFields[fieldIndex];
+                            const content = moodleField.textContent.trim();
+                            if (content !== '') {
+                                subcell.classList.add('filled');
+                                subcell.appendChild(moodleField.cloneNode(true));
 
-                                    // Check for conflicts
-                                    const name = content.toLowerCase();
-                                    if (dayEntries.has(name)) {
-                                        subcell.classList.add('conflict');
-                                    } else {
-                                        dayEntries.add(name);
-                                    }
+                                // Check for conflicts
+                                const name = content.toLowerCase();
+                                if (dayEntries.has(name)) {
+                                    subcell.classList.add('conflict');
+                                } else {
+                                    dayEntries.add(name);
                                 }
-                                fieldIndex++;
                             }
+                            fieldIndex++;
+                        }
 
                             container.appendChild(subcell);
                         } else {
@@ -576,14 +595,14 @@
                             container.appendChild(subcell);
                         }
 
-                        dayCell.appendChild(container);
-                        row.appendChild(dayCell);
-                    });
-
-                    tableBody.appendChild(row);
+                    dayCell.appendChild(container);
+                    row.appendChild(dayCell);
                 });
-            }
+
+                tableBody.appendChild(row);
+            });
         }
+    }
     </script>
 </body>
 
