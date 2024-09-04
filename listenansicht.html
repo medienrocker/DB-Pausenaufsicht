@@ -2322,7 +2322,25 @@
                     }
                 }
             });
+            slots.forEach(slot => {
+                const slotNumber = slot.className;
+                const anchor = slot.querySelector('a');
+                if (anchor) {
+                    const value = anchor.textContent.trim();
+                    const href = anchor.getAttribute('href');
+                    if (value !== '') {
+                        if (!slotData[slotNumber]) {
+                            slotData[slotNumber] = [];
+                        }
+                        slotData[slotNumber].push({ value, href });
+                    }
+                }
+            });
 
+            // Sort the slotData object by keys (slot numbers)
+            const sortedSlotData = Object.fromEntries(
+                Object.entries(slotData).sort(([a], [b]) => a.localeCompare(b))
+            );
             // Sort the slotData object by keys (slot numbers)
             const sortedSlotData = Object.fromEntries(
                 Object.entries(slotData).sort(([a], [b]) => a.localeCompare(b))
@@ -2334,18 +2352,35 @@
             // Generate the table
             generatePausenaufsichtTable(sortedSlotData);
         });
+            // Generate the table
+            generatePausenaufsichtTable(sortedSlotData);
+        });
 
+        function generatePausenaufsichtTable(slotData) {
+            const tableBody = document.querySelector('#pausenaufsicht-table tbody');
         function generatePausenaufsichtTable(slotData) {
             const tableBody = document.querySelector('#pausenaufsicht-table tbody');
 
             tableBody.innerHTML = ''; // Clear existing content
+            tableBody.innerHTML = ''; // Clear existing content
 
+            let slotIndex = 1;
             let slotIndex = 1;
 
             // Iterate through the maximum number of pauses
             for (let pauseIndex = 0; pauseIndex < MAX_PAUSES; pauseIndex++) {
                 const pauseEntries = new Map(); // Track entries for each day in this pause
+            // Iterate through the maximum number of pauses
+            for (let pauseIndex = 0; pauseIndex < MAX_PAUSES; pauseIndex++) {
+                const pauseEntries = new Map(); // Track entries for each day in this pause
 
+                ORTE.forEach((ort, ortIndex) => {
+                    const row = document.createElement('tr');
+
+                    // Add a class to the first row of each pause group
+                    if (ortIndex === 0) {
+                        row.classList.add('pause-group-start');
+                    }
                 ORTE.forEach((ort, ortIndex) => {
                     const row = document.createElement('tr');
 
@@ -2362,7 +2397,20 @@
                         pauseCell.rowSpan = ORTE.length;
                         row.appendChild(pauseCell);
                     }
+                    // Pause cell (only for the first row of each pause)
+                    if (ortIndex === 0) {
+                        const pauseCell = document.createElement('td');
+                        pauseCell.textContent = `${pauseIndex + 1}. Pause`;
+                        pauseCell.className = 'pause-cell';
+                        pauseCell.rowSpan = ORTE.length;
+                        row.appendChild(pauseCell);
+                    }
 
+                    // Orte cell
+                    const orteCell = document.createElement('td');
+                    orteCell.textContent = ort.name;
+                    orteCell.className = 'orte-cell';
+                    row.appendChild(orteCell);
                     // Orte cell
                     const orteCell = document.createElement('td');
                     orteCell.textContent = ort.name;
@@ -2375,7 +2423,15 @@
                         dayCell.className = 'content-cell';
                         const container = document.createElement('div');
                         container.className = 'subcell-container';
+                    // Weekday cells
+                    WEEKDAYS.forEach(day => {
+                        const dayCell = document.createElement('td');
+                        dayCell.className = 'content-cell';
+                        const container = document.createElement('div');
+                        container.className = 'subcell-container';
 
+                        const slotKey = `slot${String(slotIndex).padStart(3, '0')}`;
+                        const entries = slotData[slotKey] || [];
                         const slotKey = `slot${String(slotIndex).padStart(3, '0')}`;
                         const entries = slotData[slotKey] || [];
 
@@ -2383,7 +2439,30 @@
                             pauseEntries.set(day.name, new Set());
                         }
                         const dayEntries = pauseEntries.get(day.name);
+                        if (!pauseEntries.has(day.name)) {
+                            pauseEntries.set(day.name, new Set());
+                        }
+                        const dayEntries = pauseEntries.get(day.name);
 
+                        if (pauseIndex < day.pauses) {
+                            const slotKey = `slot${String(slotIndex).padStart(3, '0')}`;
+                            const entries = slotData[slotKey] || [];
+
+                            // Determine the overall filling state for this cell
+                            let fillingState;
+                            if (entries.length < ort.teachersNeeded) {
+                                fillingState = 'almostFilled';
+                            } else if (entries.length === ort.teachersNeeded) {
+                                fillingState = 'filled';
+                            } else {
+                                fillingState = 'overfilled';
+                            }
+
+                            for (let j = 0; j < Math.max(entries.length, ort.teachersNeeded); j++) {
+                                const subcell = document.createElement('a');
+                                subcell.className = 'subcell-item';
+                                subcell.style.display = 'flex';
+                                subcell.title = "Eintrag bearbeiten";
                         if (pauseIndex < day.pauses) {
                             const slotKey = `slot${String(slotIndex).padStart(3, '0')}`;
                             const entries = slotData[slotKey] || [];
@@ -2414,7 +2493,29 @@
 
                                     // Apply the filling state class
                                     subcell.classList.add(fillingState);
+                                if (j < entries.length) {
+                                    const entry = entries[j];
+                                    const span = document.createElement('span');
+                                    const name = entry.value.toLowerCase();
+                                    span.textContent = entry.value;
+                                    subcell.appendChild(span);
+                                    subcell.href = entry.href;
 
+                                    // Apply the filling state class
+                                    subcell.classList.add(fillingState);
+
+                                    // Check for conflicts
+                                    if (dayEntries.has(name)) {
+                                        subcell.classList.add('conflict');
+                                    } else {
+                                        dayEntries.add(name);
+                                    }
+                                } else {
+                                    // Empty subcell for unfilled positions
+                                    subcell.textContent = '';
+                                    subcell.title = "Aufsicht fehlt noch!";
+                                    subcell.classList.add('almostFilled'); // Empty cells are always 'almostFilled'
+                                }
                                     // Check for conflicts
                                     if (dayEntries.has(name)) {
                                         subcell.classList.add('conflict');
@@ -2438,12 +2539,30 @@
                             subcell.title = "Keine Aufsicht nötig";
                             container.appendChild(subcell);
                         }
+                                container.appendChild(subcell);
+                            }
+                        } else {
+                            // Create disabled cell for non-existent pauses
+                            const subcell = document.createElement('div');
+                            subcell.className = 'subcell-item disabled';
+                            subcell.textContent = '-';
+                            subcell.title = "Keine Aufsicht nötig";
+                            container.appendChild(subcell);
+                        }
 
                         dayCell.appendChild(container);
                         row.appendChild(dayCell);
                         slotIndex++;
                     });
+                        dayCell.appendChild(container);
+                        row.appendChild(dayCell);
+                        slotIndex++;
+                    });
 
+                    tableBody.appendChild(row);
+                });
+            }
+        }
                     tableBody.appendChild(row);
                 });
             }
