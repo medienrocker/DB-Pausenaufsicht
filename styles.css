@@ -64,7 +64,7 @@ th {
 
 .subcell-item {
     flex: 0 0 auto;
-    width: 42px;
+    width: 45px;
     height: 20px;
     margin: 2px;
     background-color: #e9ecef;
@@ -140,8 +140,7 @@ th {
 }
 
 .single-subcell-item input[type="text"] {
-    max-width: 60px;
-    max-width: 60px;
+    max-width: 75px;
     margin-left: 4px;
     margin-right: 4px;
     text-transform: uppercase;
@@ -343,4 +342,37 @@ th {
 
 .sticker-button-delete:active svg {
     top: -25%;
+}
+
+/* ----- User image and user name on mouseover ----- */
+
+/* Container for the link */
+.user-link {
+    position: relative;
+    display: inline-block;
+}
+
+/* Hidden tooltip container */
+.user-link .tooltip-content {
+    visibility: hidden;
+    opacity: 0;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    /* Center the tooltip */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show the tooltip on hover */
+.user-link:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
 }

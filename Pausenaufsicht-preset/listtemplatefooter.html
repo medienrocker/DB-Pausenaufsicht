@@ -50,6 +50,9 @@
             Object.entries(slotData).sort(([a], [b]) => a.localeCompare(b))
         );
 
+        // 
+        setPerPageValue(300);
+
         // Generate the table
         generatePausenaufsichtTable(sortedSlotData);
     });
@@ -162,6 +165,26 @@
 
                 tableBody.appendChild(row);
             });
+        }
+    }
+
+    function setPerPageValue(entriesPerPage) {
+        // Get the select element by its ID
+        const selectElement = document.getElementById('pref_perpage');
+
+        // Set the value to entriesPerPage
+        selectElement.value = entriesPerPage;
+
+        // Check if the value was set successfully
+        if (selectElement.value !== entriesPerPage) {
+            console.warn("Unable to set value to 300. This option might not exist in the select element.");
+
+            // Optionally, you can add a new option if it doesn't exist
+            if (!Array.from(selectElement.options).some(option => option.value === entriesPerPage)) {
+                const newOption = new Option(entriesPerPage, entriesPerPage);
+                selectElement.add(newOption);
+                selectElement.value = entriesPerPage;
+            }
         }
     }
 </script>

@@ -64,7 +64,7 @@ th {
 
 .subcell-item {
     flex: 0 0 auto;
-    width: 42px;
+    width: 45px;
     height: 20px;
     margin: 2px;
     background-color: #e9ecef;
@@ -140,8 +140,7 @@ th {
 }
 
 .single-subcell-item input[type="text"] {
-    max-width: 60px;
-    max-width: 60px;
+    max-width: 75px;
     margin-left: 4px;
     margin-right: 4px;
     text-transform: uppercase;
