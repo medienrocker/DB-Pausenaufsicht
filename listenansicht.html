@@ -357,7 +357,8 @@
             </tbody>
         </table>
         <span class="slot001">
-            <div class="user-link"><a href=##moreurl##>[[slot001]]<div class="tooltip-content">##userpicture## ##user##</div>
+            <div class="user-link"><a href=##moreurl##>[[slot001]]<div class="tooltip-content">##userpicture## ##user##
+                    </div>
             </div>
         </span>
     </div>
@@ -378,7 +379,7 @@
             { name: 'Di', pauses: 3 },
             { name: 'Mi', pauses: 3 },
             { name: 'Do', pauses: 3 },
-            { name: 'Fr', pauses: 3 }
+            { name: 'Fr', pauses: 2 }
         ];
 
 
@@ -389,6 +390,7 @@
 
         // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function () {
+
             // Extract data from slot spans
             const slotData = {};
             const slots = document.querySelectorAll('#moodle-fields-container span[class^="slot"]');
@@ -421,6 +423,10 @@
         });
 
         function generatePausenaufsichtTable(slotData) {
+            // Find the 'Eintrag hinzufügen' button and extract its href
+            const addEntryButton = document.querySelector('a[role="button"]:not([href="#"])');
+            const addEntryHref = addEntryButton ? addEntryButton.getAttribute('href') : '#';
+
             const tableBody = document.querySelector('#pausenaufsicht-table tbody');
 
             tableBody.innerHTML = ''; // Clear existing content
@@ -484,7 +490,6 @@
                                 const subcell = document.createElement('a');
                                 subcell.className = 'subcell-item';
                                 subcell.style.display = 'flex';
-                                subcell.title = "Eintrag bearbeiten";
 
                                 if (j < entries.length) {
                                     const entry = entries[j];
@@ -493,6 +498,7 @@
                                     span.textContent = entry.value;
                                     subcell.appendChild(span);
                                     subcell.href = entry.href;
+                                    subcell.title = "Eintrag bearbeiten";
 
                                     // Apply the filling state class
                                     subcell.classList.add(fillingState);
@@ -505,9 +511,11 @@
                                     }
                                 } else {
                                     // Empty subcell for unfilled positions
-                                    subcell.textContent = '';
-                                    subcell.title = "Aufsicht fehlt noch!";
-                                    subcell.classList.add('almostFilled'); // Empty cells are always 'almostFilled'
+                                    subcell.href = `${addEntryHref}&slotIndex=${slotIndex}`;
+                                    subcell.title = "Aufsicht fehlt noch!\nKlicken zum Hinzufügen";
+                                    subcell.classList.add('almostFilled');
+
+                                    console.log(subcell.hre);
                                 }
 
                                 container.appendChild(subcell);
@@ -530,13 +538,15 @@
                 });
             }
         }
-    
+
         function setPerPageValue(entriesPerPage) {
             // Get the select element by its ID
             const selectElement = document.getElementById('pref_perpage');
+            console.log("Einträge pro Seite am Anfang: " + selectElement.value);
 
             // Set the value to entriesPerPage
             selectElement.value = entriesPerPage;
+            console.log("Einträge pro Seite am Ende: " + selectElement.value);
 
             // Check if the value was set successfully
             if (selectElement.value !== entriesPerPage) {
@@ -550,7 +560,6 @@
                 }
             }
         }
-    
     </script>
 
 </body>
