@@ -176,9 +176,16 @@
 
                     if (inputField) {
                         inputField.focus();
-                        inputField.value = 'XYZ';
+                        inputField.value = '';
                         inputField.select();
                         console.log('Focus and text set for input field');
+
+                        // Add a brief highlight effect
+                        inputField.style.transition = 'background-color 0.3s ease';
+                        inputField.style.backgroundColor = '#2dc450'; // green highlight
+                        setTimeout(() => {
+                            inputField.style.backgroundColor = ''; // Return to original color
+                        }, 1000);
 
                         inputField.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     } else {

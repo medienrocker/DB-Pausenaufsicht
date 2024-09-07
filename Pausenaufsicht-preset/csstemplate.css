@@ -376,3 +376,40 @@ th {
     visibility: visible;
     opacity: 1;
 }
+
+/* ----- Highlight active / focused input fields ----- */
+
+/* Style for the input field when focused */
+.single-subcell-item input:focus {
+    outline: none;
+    background-color: #e6f3ff;
+    box-shadow: 0 0 0 2px #ffa500;
+    /* #4da6ff; */
+}
+
+/* Style for the parent cell when the input is focused */
+.single-subcell-item:focus-within {
+    background-color: #2dc450;
+    box-shadow: 0 0 5px #ffa500;
+    /* rgba(77, 166, 255, 0.5); */
+}
+
+.form-control:focus {
+    border-color: #ffa500;
+}
+
+/* Ensure the transition is smooth */
+.single-subcell-item,
+.single-subcell-item input {
+    transition: all 0.3s ease;
+}
+
+/* Optional: Style for the entire row when an input in it is focused */
+tr:focus-within {
+    background-color: #fafcff;
+}
+
+/* Optional: Hover effect for better interactivity */
+.single-subcell-item:hover {
+    background-color: #2dc450;
+}
